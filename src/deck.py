@@ -14,6 +14,9 @@ class Deck:
     def __repr__(self):
         return self.save()
 
+    # def __eq__(self, other):
+    #     return self.cards == other.cards
+
     def save(self) -> str:
         """Convert deck to string in 'b4 g7 y0' format."""
         scards = [c.save() for c in self.cards]         # ['b4', 'g7', 'y0']

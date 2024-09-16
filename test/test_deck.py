@@ -17,6 +17,10 @@ def test_save():
 def test_load():
     d = Deck.load('b3 b0 g7')
     expected_deck = Deck(cards)
-    print(type(d), d)
-    print(type(expected_deck), expected_deck)
+    # print()
+    # print(type(d), d)
+    # print(type(expected_deck), expected_deck)
+    # так можно сравнивать, если нет метода __eq__
+    assert str(d) == str(expected_deck)
+    # так можно сравнивать, если есть метод __eq__
     assert d == expected_deck
