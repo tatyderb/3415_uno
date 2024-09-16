@@ -66,3 +66,19 @@ def test_play_on():
     assert c3.can_play_on(c1)
     assert not c4.can_play_on(c1)
 
+def test_all_cards():
+    cards = Card.all_cards(['b', 'r'], numbers=[5, 2, 9])
+    # print(cards)
+    expected_cards = [
+        Card.load('b5'),
+        Card.load('b2'),
+        Card.load('b9'),
+        Card.load('r5'),
+        Card.load('r2'),
+        Card.load('r9')
+    ]
+    assert cards == expected_cards
+
+    cards = Card.all_cards()
+    assert len(cards) == 4 * 19
+

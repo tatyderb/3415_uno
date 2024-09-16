@@ -4,7 +4,7 @@ from typing import Self
 
 class Card:
     COLORS = ['r', 'g', 'b', 'y']
-    NUMBERS = list(range(10))
+    NUMBERS = list(range(10)) + list(range(1, 10))
 
     def __init__(self, color: str, number: int):
         if color not in Card.COLORS:
@@ -32,4 +32,18 @@ class Card:
     def can_play_on(self, other: Self) -> bool:
         """Можно ли играть карту self на карту other."""
         return self.color == other.color or self.number == other.number
+
+    @staticmethod
+    def all_cards(colors: list[str] | None = None, numbers: None | list[int] = None):
+        if colors is None:
+            colors = Card.COLORS
+        if numbers is None:
+            numbers = Card.NUMBERS
+        # cards = []
+        # for col in colors:
+        #     for num in numbers:
+        #         cards.append(Card(color=col, number=num))
+        cards = [Card(color=col, number=num) for col in colors for num in numbers]
+        return cards
+
 
