@@ -1,3 +1,4 @@
+import random
 import typing
 
 from src.card import Card
@@ -14,8 +15,8 @@ class Deck:
     def __repr__(self):
         return self.save()
 
-    # def __eq__(self, other):
-    #     return self.cards == other.cards
+    def __eq__(self, other):
+        return self.cards == other.cards
 
     def save(self) -> str:
         """Convert deck to string in 'b4 g7 y0' format."""
@@ -29,8 +30,11 @@ class Deck:
         cards = [Card.load(s) for s in text.split()]
         return cls(cards=cards)
 
+    def draw_card(self):
+        """Берем карту из колоды и возвращаем ее."""
+        return self.cards.pop()
 
 
 
     def shuffle(self):
-        pass
+        random.shuffle(self.cards)

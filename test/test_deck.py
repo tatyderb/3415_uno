@@ -1,3 +1,5 @@
+import random
+
 from src.card import Card
 from src.deck import Deck
 
@@ -24,3 +26,39 @@ def test_load():
     assert str(d) == str(expected_deck)
     # так можно сравнивать, если есть метод __eq__
     assert d == expected_deck
+
+def test_draw_card():
+    d1 = Deck.load('b3 b0 g7')
+    d2 = Deck.load('b3 b0')
+    c = d1.draw_card()
+    assert c == Card.load('g7')
+    assert d1 == d2
+
+
+def test_shuffle_1():
+    cards = Card.all_cards(['b', 'r'], numbers=[5, 2, 9])
+    deck = Deck(cards=cards)
+    deck_list = [deck.save()]
+    for i in range(5):
+        deck.shuffle()
+        s = deck.save()
+        assert s not in deck_list
+        deck_list.append(s)
+
+def test_shuffle_2():
+    random.seed(3)
+
+    cards = Card.all_cards(['b', 'r'], numbers=[5, 2, 9])
+    deck = Deck(cards=cards)
+    deck_list = [deck.save()]
+
+    deck.shuffle()
+    assert deck.save() == 'b5 b9 r5 r9 r2 b2'
+
+    deck.shuffle()
+    assert deck.save() == 'b9 r9 r5 b5 r2 b2'
+
+    deck.shuffle()
+    assert deck.save() == 'r2 b2 b9 r9 r5 b5'
+
+
