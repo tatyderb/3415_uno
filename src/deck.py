@@ -1,0 +1,33 @@
+import typing
+
+from src.card import Card
+
+
+class Deck:
+    def __init__(self, cards: None | list[Card]):
+        if cards is None:
+            # создание новой колоды
+            cards = Card.all_cards()
+            self.shuffle()
+        self.cards: list[Card] = cards
+
+    def __repr__(self):
+        return self.save()
+
+    def save(self) -> str:
+        """Convert deck to string in 'b4 g7 y0' format."""
+        scards = [c.save() for c in self.cards]         # ['b4', 'g7', 'y0']
+        s = ' '.join(scards)
+        return s
+
+    @classmethod
+    def load(cls, text: str) -> typing.Self:
+        """Convert string in 'b4 g7 y0' format to Deck. Return deck."""
+        cards = [Card.load(s) for s in text.split()]
+        return cls(cards=cards)
+
+
+
+
+    def shuffle(self):
+        pass
