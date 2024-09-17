@@ -19,6 +19,8 @@ class Card:
         return f'{self.color}{self.number}'
 
     def __eq__(self, other):
+        if isinstance(other, str):
+            other = Card.load(other)
         return self.color == other.color and self.number == other.number
 
     def __lt__(self, other):

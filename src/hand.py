@@ -14,6 +14,8 @@ class Hand:
         return self.save()
 
     def __eq__(self, other):
+        if isinstance(other, str):
+            other = Hand.load(other)
         return self.cards == other.cards
 
     def save(self) -> str:

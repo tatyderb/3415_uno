@@ -7,12 +7,12 @@ from src.player import Player
 
 class GameState:
     def __init__(self, players: list[Player], deck: Deck, top: Card, current_player: int = 0):
-        self.players = players
-        self.deck = deck
-        self.top = top
-        self._current_player = current_player
+        self.players: list[Player] = players
+        self.deck: Deck = deck
+        self.top: Card = top
+        self._current_player: int = current_player
 
-    def current_player(self):
+    def current_player(self) -> Player:
         return self.players[self._current_player]
 
     def __eq__(self, other):
@@ -69,3 +69,18 @@ class GameState:
             deck=Deck.load(data['deck']),
             top=Card.load(data['top']),
             current_player=int(data['current_player_index']))
+
+    def next_player(self):
+        """Ход переходит к следующему игроку."""
+        n = len(self.players)
+        self._current_player = (self._current_player + 1) % n
+
+    def draw_card(self):
+        """Текущий игрок берет карту из колоды."""
+        card = self.deck.draw_card()
+        self.current_player().hand.add_card(card)
+
+    def play_card(self, card: Card):
+        """Карта card от текущего игрока переходит в top."""
+        self.current_player().hand.remove_card(card)
+        self.top = card

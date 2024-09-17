@@ -74,6 +74,38 @@ def test_load():
     assert game.save() == data
 
 
+def test_next_player():
+    game = GameState.load(data)
+    assert game.current_player() == bob
+
+    game.next_player()
+    assert game.current_player() == charley
+
+    game.next_player()
+    assert game.current_player() == alex
+
+    game.next_player()
+    assert game.current_player() == bob
 
 
+def test_draw_card():
+    game = GameState.load(data)
+    assert game.deck == 'g2 y6 b0'
+    assert game.current_player().hand == 'g5'
+
+    game.draw_card()
+    assert game.deck == 'g2 y6'
+    assert game.current_player().hand == 'g5 b0'
+
+
+def test_play_card():
+    players = [alex, bob, charley]
+    game = GameState(players=players, deck=full_deck, top=Card.load('y7'), current_player=2)
+
+    assert game.current_player().hand == 'g7 g1 b2'
+    assert game.top == 'y7'
+
+    game.play_card(Card.load('g1'))
+    assert game.current_player().hand == 'g7 b2'
+    assert game.top == 'g1'
 

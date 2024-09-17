@@ -16,6 +16,8 @@ class Deck:
         return self.save()
 
     def __eq__(self, other):
+        if isinstance(other, str):
+            other = Deck.load(other)
         return self.cards == other.cards
 
     def save(self) -> str:
