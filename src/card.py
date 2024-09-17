@@ -21,6 +21,14 @@ class Card:
     def __eq__(self, other):
         return self.color == other.color and self.number == other.number
 
+    def __lt__(self, other):
+        """ожидаемый порядок: r0 r1 .. r9 g0...g9 b0..b9 y0..y9"""
+        if self.color == other.color:
+            return self.number < other.number
+        ind_self = self.COLORS.index(self.color)
+        ind_other = self.COLORS.index(other.color)
+        return ind_self < ind_other
+
     def save(self):
         return repr(self)
 

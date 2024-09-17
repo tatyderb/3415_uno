@@ -9,6 +9,14 @@ def test_init():
     d = Deck(cards=cards)
     assert d.cards == cards
 
+def test_init_shuffle():
+    """Проверяем, что карт столько же, но они в другом порядке."""
+    full_deck1 = Deck(None)
+    full_deck2 = Deck(None)
+    assert full_deck1.cards != full_deck2.cards
+    assert sorted(full_deck1.cards) == sorted(full_deck2.cards)
+
+
 def test_save():
     d = Deck(cards=cards)
     assert d.save() == 'b3 b0 g7'

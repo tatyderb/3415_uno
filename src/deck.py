@@ -9,7 +9,7 @@ class Deck:
         if cards is None:
             # создание новой колоды
             cards = Card.all_cards()
-            self.shuffle()
+            random.shuffle(cards)
         self.cards: list[Card] = cards
 
     def __repr__(self):
