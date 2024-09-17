@@ -71,11 +71,11 @@ Bob: y6 y2 r8 g7
 Bob: play g7
 ----
 Top: g7
-Alex: r3 y5 g1
+Alex(12): r3 y5 g1
 Alex: play g1
 ----
 Top: g1
-Bob: y6 y2 r8
+Bob(0): y6 y2 r8
 Bob: draw card
 Bob: y6 y2 r8 b6
 ---
@@ -97,12 +97,14 @@ Alex WIN!
     {
       "name": "Alex",
       "hand": "r3 y5 g4 g1",
-      "is_human": true
+      "is_human": true,
+      "score": 12
     },
     {
       "name": "Bob",
       "hand": "y6 y2 r8",
-      "is_human": false
+      "is_human": false,
+      "score": 0
     }
   ]
 }
