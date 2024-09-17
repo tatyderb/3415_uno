@@ -1,0 +1,71 @@
+import typing
+
+from src.card import Card
+from src.deck import Deck
+from src.player import Player
+
+
+class GameState:
+    def __init__(self, players: list[Player], deck: Deck, top: Card, current_player: int = 0):
+        self.players = players
+        self.deck = deck
+        self.top = top
+        self._current_player = current_player
+
+    def current_player(self):
+        return self.players[self._current_player]
+
+    def __eq__(self, other):
+        # return self.players == other.players and self.deck == other.deck and self.top == other.top and \
+        #         self._current_player == other._current_player
+        if self.players != other.players:
+            return False
+        if self.deck != other.deck:
+            return False
+        if self.top != other.top:
+            return False
+        if self._current_player != other._current_player:
+            return False
+        return True
+
+    def save(self) -> dict:
+        return {
+          "top": str(self.top),
+          "deck": str(self.deck),
+          "current_player_index": self._current_player,
+          "players": [p.save() for p in self.players]
+        }
+
+    @classmethod
+    def load(cls, data: dict):
+        '''
+        data = {
+            'top': 'y7',
+            'current_player_index': 1,
+            'deck': 'g2 y6 b0',
+            'players': [
+                {
+                    'name': 'Alex',
+                    'hand': 'y3 b6',
+                    'score': 5
+                },
+                {
+                    'name': 'Bob',
+                    'hand': 'g5',
+                    'score': 1
+                },
+                {
+                    'name': 'Charley',
+                    'hand': 'g7 g1 b2',
+                    'score': 3
+                }
+            ]
+        }
+        '''
+        players = [Player.load(d) for d in data['players']]
+
+        return cls(
+            players=players,
+            deck=Deck.load(data['deck']),
+            top=Card.load(data['top']),
+            current_player=int(data['current_player_index']))
