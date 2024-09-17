@@ -82,3 +82,10 @@ def test_all_cards():
     cards = Card.all_cards()
     assert len(cards) == 4 * 19
 
+def test_score():
+    c = Card('y', 7)
+    assert 7 == c.score()
+
+    c = Card('b', 5)
+    assert 5 == c.score()
+

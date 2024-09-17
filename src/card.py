@@ -46,4 +46,8 @@ class Card:
         cards = [Card(color=col, number=num) for col in colors for num in numbers]
         return cards
 
+    def score(self):
+        """Штрафные очки за карту."""
+        return self.number
+
 
