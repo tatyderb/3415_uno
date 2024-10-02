@@ -4,7 +4,7 @@ from src.card import Card
 
 
 class Hand:
-    def __init__(self, cards:  list[Card] = []):
+    def __init__(self, cards: list[Card] = []):
         if cards is None:
             # может быть пустая рука
             cards = []
@@ -20,8 +20,8 @@ class Hand:
 
     def save(self) -> str:
         """Convert deck to string in 'b4 g7 y0' format."""
-        scards = [c.save() for c in self.cards]         # ['b4', 'g7', 'y0']
-        s = ' '.join(scards)
+        scards = [c.save() for c in self.cards]  # ['b4', 'g7', 'y0']
+        s = " ".join(scards)
         return s
 
     @classmethod

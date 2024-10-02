@@ -22,8 +22,8 @@ class Deck:
 
     def save(self) -> str:
         """Convert deck to string in 'b4 g7 y0' format."""
-        scards = [c.save() for c in self.cards]         # ['b4', 'g7', 'y0']
-        s = ' '.join(scards)
+        scards = [c.save() for c in self.cards]  # ['b4', 'g7', 'y0']
+        s = " ".join(scards)
         return s
 
     @classmethod
@@ -35,8 +35,6 @@ class Deck:
     def draw_card(self):
         """Берем карту из колоды и возвращаем ее."""
         return self.cards.pop()
-
-
 
     def shuffle(self):
         random.shuffle(self.cards)

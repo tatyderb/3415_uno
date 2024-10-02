@@ -1,9 +1,10 @@
 """Карты UNO."""
+
 from typing import Self
 
 
 class Card:
-    COLORS = ['r', 'g', 'b', 'y']
+    COLORS = ["r", "g", "b", "y"]
     NUMBERS = list(range(10)) + list(range(1, 10))
 
     def __init__(self, color: str, number: int):
@@ -16,7 +17,7 @@ class Card:
 
     def __repr__(self):
         # 'r3'
-        return f'{self.color}{self.number}'
+        return f"{self.color}{self.number}"
 
     def __eq__(self, other):
         if isinstance(other, str):
@@ -59,5 +60,3 @@ class Card:
     def score(self):
         """Штрафные очки за карту."""
         return self.number
-
-

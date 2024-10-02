@@ -6,7 +6,9 @@ from src.player import Player
 
 
 class GameState:
-    def __init__(self, players: list[Player], deck: Deck, top: Card, current_player: int = 0):
+    def __init__(
+        self, players: list[Player], deck: Deck, top: Card, current_player: int = 0
+    ):
         self.players: list[Player] = players
         self.deck: Deck = deck
         self.top: Card = top
@@ -30,15 +32,15 @@ class GameState:
 
     def save(self) -> dict:
         return {
-          "top": str(self.top),
-          "deck": str(self.deck),
-          "current_player_index": self._current_player,
-          "players": [p.save() for p in self.players]
+            "top": str(self.top),
+            "deck": str(self.deck),
+            "current_player_index": self._current_player,
+            "players": [p.save() for p in self.players],
         }
 
     @classmethod
     def load(cls, data: dict):
-        '''
+        """
         data = {
             'top': 'y7',
             'current_player_index': 1,
@@ -61,14 +63,15 @@ class GameState:
                 }
             ]
         }
-        '''
-        players = [Player.load(d) for d in data['players']]
+        """
+        players = [Player.load(d) for d in data["players"]]
 
         return cls(
             players=players,
-            deck=Deck.load(data['deck']),
-            top=Card.load(data['top']),
-            current_player=int(data['current_player_index']))
+            deck=Deck.load(data["deck"]),
+            top=Card.load(data["top"]),
+            current_player=int(data["current_player_index"]),
+        )
 
     def next_player(self):
         """Ход переходит к следующему игроку."""
