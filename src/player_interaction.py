@@ -1,0 +1,2 @@
+class PlayerInteraction:
+    pass
