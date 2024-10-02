@@ -42,3 +42,7 @@ class Hand:
         for c in self.cards:
             res += c.score()
         return res
+
+    def playable_cards(self, top_card: Card) -> [Card]:
+        """Какие карты можно сыграть"""
+        return [c for c in self.cards if c.can_play_on(top_card)]
