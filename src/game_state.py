@@ -78,10 +78,11 @@ class GameState:
         n = len(self.players)
         self._current_player = (self._current_player + 1) % n
 
-    def draw_card(self):
+    def draw_card(self) -> Card:
         """Текущий игрок берет карту из колоды."""
         card = self.deck.draw_card()
         self.current_player().hand.add_card(card)
+        return card
 
     def play_card(self, card: Card):
         """Карта card от текущего игрока переходит в top."""
