@@ -1,5 +1,6 @@
 from src.card import Card
 from src.hand import Hand
+from src.player import Player
 
 from src.player_interaction import PlayerInteraction
 
@@ -26,3 +27,17 @@ class Bot(PlayerInteraction):
         Бот всегда играет карту.
         """
         return True
+
+    @classmethod
+    def inform_card_drawn(cls, player: Player):
+        """
+        Сообщает, что игрок взял карту.
+        """
+        pass
+
+    @classmethod
+    def inform_card_played(cls, player: Player, card: Card):
+        """
+        Сообщает, что игрок сыграл карту.
+        """
+        pass
