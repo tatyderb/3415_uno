@@ -4,7 +4,7 @@ from src.card import Card
 
 
 class Hand:
-    def __init__(self, cards: list[Card] = []):
+    def __init__(self, cards: list[Card] | None = None):
         if cards is None:
             # может быть пустая рука
             cards = []
