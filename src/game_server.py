@@ -1,4 +1,6 @@
 import inspect
+import json
+import sys
 
 from src.deck import Deck
 from src.game_state import GameState
@@ -22,15 +24,34 @@ class GamePhase(enum.StrEnum):
 
 class GameServer:
     def __init__(self, player_types, game_state):
-        self.game_state = game_state
-        self.player_types = player_types  # {player: PlayerInteractions}
+        self.game_state: GameState = game_state
+        self.player_types: dict = player_types  # {player: PlayerInteractions}
 
     @classmethod
     def load_game(cls):
-        pass
+        # TODO: выбрать имя файла
+        filename = 'uno.json'
+        with open(filename, 'r') as fin:
+            data = json.load(fin)
+            game_state = GameState.load(data)
+            print(game_state.save())
+            player_types = {}
+            for player, player_data in zip(game_state.players, data['players']):
+                kind = player_data['kind']
+                kind = getattr(all_player_types, kind)
+                player_types[player] = kind
+            return GameServer(player_types=player_types, game_state=game_state)
+
+    def save(self):
+        # {'top': 'r2', 'deck': 'r0 g2 y1', 'current_player_index': 1, 'players': [{'name': 'Alex', 'hand': 'g5 b5', 'score': 0}, {'name': 'Bob', 'hand': 'y7', 'score': 1}]}
+        data = self.game_state.save()
+        for player_index, p in enumerate(self.player_types.keys()):
+            player_interaction = self.player_types[p]
+            data['players'][player_index]['kind'] = 'Bot'
+        return data
 
     @classmethod
-    def new_game(cls):
+    def get_players(cls):
         player_count = cls.request_player_count()
 
         player_types = {}
@@ -38,7 +59,10 @@ class GameServer:
             name, kind = cls.request_player()
             player = Player(name, Hand())
             player_types[player] = kind
+        return player_types
 
+    @classmethod
+    def new_game(cls, player_types: dict):
         # Shuffle the deck and deal the top card
         deck = Deck(cards=None)
         top = deck.draw_card()
@@ -189,7 +213,11 @@ class GameServer:
 
 
 def __main__():
-    server = GameServer.new_game()
+    load_from_file = True
+    if load_from_file:
+        server = GameServer.load_game()
+    else:
+        server = GameServer.new_game(GameServer.get_players())
     server.run()
 
 
