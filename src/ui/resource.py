@@ -7,6 +7,7 @@ RESOURCE = {
     # 218 x 336
     "card_width": 109,
     "card_height": 178,
+    "FPS": 24,
     "image": {
         "icon": "ui/uno_icon.png",
         "card_img_base_dir": "img",

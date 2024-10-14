@@ -1,3 +1,6 @@
+import typing
+from dataclasses import dataclass
+
 import pygame
 from pygame.event import Event
 
@@ -62,12 +65,61 @@ class CardView:
                 x, y = pygame.mouse.get_pos()
                 if self.rect.collidepoint(x, y):
                     self.flip()
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_z:
-                self.flip()
 
     def flip(self):
         self.face = not self.face
         print(f'Flip card {self.card}')
 
 
+@dataclass
+class Fly:
+    vcard: CardView | None = None
+    start: tuple[int, int] = (0, 0)     # (x, y)
+    finish: tuple[int, int] = (0, 0)    # (x, y)
+    total_iterations: int = 60      # общая длительность анимации в итерациях (план)
+    iteration: int = 0              # сколько итераций уже сделали
+    animation_mode: bool = False
+    # end_callback: typing.Any = None        # выполняется код end_callback(card) в конце fly
+
+    def fly(self):
+        if not self.animation_mode:
+            # raise Exception('Не должны были вызывать эту функцию')
+            # пока ограничимся тем, что не будем лететь, пока не начали летать или уже закончили
+            return
+
+        self.iteration += 1
+        if self.iteration >= self.total_iterations:
+            self.end()
+            return
+        x1, y1 = self.start
+        x2, y2 = self.finish
+        x = x1 + (x2 - x1) * self.iteration // self.total_iterations
+        y = y1 + (y2 - y1) * self.iteration // self.total_iterations
+        self.vcard.x = x
+        self.vcard.y = y
+
+    def end(self):
+        print(f'Fly end with {self.vcard}')
+        self.vcard.pos = self.finish
+        self.animation_mode = False
+        # if self.end_callback is not None:
+        #     self.end_callback(self.vcard)
+        # user_event.post_event(user_event.FLY_END_EVENT)  # result to game.fly_end
+        self.vcard = None
+
+    def begin(self, vcard: CardView, to: tuple[int, int], on_end=None, ticks: int = RSC['FPS']):
+        self.animation_mode = True
+        self.vcard = vcard
+        self.start = (vcard.x, vcard.y)
+        self.finish = to
+        self.total_iterations = ticks
+        self.iteration = 0
+        print(f'Fly begin with {self.vcard}')
+        self.end_callback = on_end
+
+    def flying(self):
+        return self.animation_mode
+
+    def redraw(self, display: pygame.Surface):
+        if self.flying():
+            self.vcard.redraw(display)
