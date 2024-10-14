@@ -25,10 +25,12 @@ class Application:
         self.display.fill('darkgreen', (0, 0, self.width, self.height))
         pygame.display.update(self.window_rect)
         while running:
-            self.vgame.draw(self.display)
+            self.vgame.redraw(self.display)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT or event.type == pygame.KEYDOWN and event.key == pygame.K_q:
                     running = False
+                self.vgame.event_processing(event)
+            self.vgame.model_update()
 
 
 def main():
