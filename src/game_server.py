@@ -23,6 +23,8 @@ class GamePhase(enum.StrEnum):
 
 
 class GameServer:
+    INITIAL_HAND_SIZE = 6
+
     def __init__(self, player_types, game_state):
         self.game_state: GameState = game_state
         self.player_types: dict = player_types  # {player: PlayerInteractions}
@@ -46,7 +48,7 @@ class GameServer:
         filename = 'uno.json'
         data = self.save_to_dict()
         with open(filename, 'w') as fout:
-            json.dump(data, fout)
+            json.dump(data, fout, indent=4)
 
     def save_to_dict(self):
         # {'top': 'r2', 'deck': 'r0 g2 y1', 'current_player_index': 1, 'players': [{'name': 'Alex', 'hand': 'g5 b5', 'score': 0}, {'name': 'Bob', 'hand': 'y7', 'score': 1}]}
@@ -75,7 +77,7 @@ class GameServer:
         game_state = GameState(list(player_types.keys()), deck, top)
 
         # Each player starts with 6 cards
-        for _ in range(6):
+        for _ in range(cls.INITIAL_HAND_SIZE):
             for p in player_types.keys():
                 p.hand.add_card(deck.draw_card())
 
@@ -196,6 +198,16 @@ class GameServer:
 
     @staticmethod
     def request_player() -> (str, PlayerInteraction):
+        """Возвращает имя и тип игрока."""
+
+        """Разрешенные типы игроков из PlayerInteraction."""
+        # Getting all names of subclasses of PlayerInteraction from  all_player_types
+        player_types = []
+        for name, cls in inspect.getmembers(all_player_types):
+            if inspect.isclass(cls) and issubclass(cls, PlayerInteraction):
+                player_types.append(cls.__name__)
+        player_types_as_str = ', '.join(player_types)
+
         while True:
             name = input("How to call a player?")
             if name.isalpha():
@@ -204,22 +216,16 @@ class GameServer:
 
         while True:
             try:
-                kind = input("What kind of player is it (bot, human, etc.)?")
+                kind = input(f"What kind of player is it ({player_types_as_str})?")
                 kind = getattr(all_player_types, kind)
                 break
             except AttributeError:
-                # Getting all names of subclasses of PlayerInteraction from  all_player_types
-                # Unnecessary code, but provides pretty output on incorrect input.
-                options = []
-                for name, cls in inspect.getmembers(all_player_types):
-                    if inspect.isclass(cls) and issubclass(cls, PlayerInteraction):
-                        options.append(cls.__name__)
-                print(f"Allowed player types are: {', '.join(options)}")
+                print(f"Allowed player types are: {player_types_as_str}")
         return name, kind
 
 
 def __main__():
-    load_from_file = True
+    load_from_file = False
     if load_from_file:
         server = GameServer.load_game()
         server.save()
