@@ -10,6 +10,7 @@ class GameView:
         self.fly = Fly()
 
     def redraw(self, display: pygame.Surface):
+        display.fill('darkgreen')
         self.vcard.redraw(display)
         self.fly.redraw(display)
         pygame.display.update()

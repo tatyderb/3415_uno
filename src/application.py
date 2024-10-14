@@ -22,8 +22,7 @@ class Application:
 
     def run(self):
         running = True
-        self.display.fill('darkgreen', (0, 0, self.width, self.height))
-        pygame.display.update(self.window_rect)
+        clock = pygame.time.Clock()
         while running:
             self.vgame.redraw(self.display)
             for event in pygame.event.get():
@@ -31,6 +30,7 @@ class Application:
                     running = False
                 self.vgame.event_processing(event)
             self.vgame.model_update()
+            clock.tick(RSC['FPS'])     # ждать 1/FPS секунды
 
 
 def main():
