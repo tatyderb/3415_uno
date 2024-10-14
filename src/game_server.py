@@ -43,11 +43,17 @@ class GameServer:
             return GameServer(player_types=player_types, game_state=game_state)
 
     def save(self):
+        filename = 'uno.json'
+        data = self.save_to_dict()
+        with open(filename, 'w') as fout:
+            json.dump(data, fout)
+
+    def save_to_dict(self):
         # {'top': 'r2', 'deck': 'r0 g2 y1', 'current_player_index': 1, 'players': [{'name': 'Alex', 'hand': 'g5 b5', 'score': 0}, {'name': 'Bob', 'hand': 'y7', 'score': 1}]}
         data = self.game_state.save()
-        for player_index, p in enumerate(self.player_types.keys()):
-            player_interaction = self.player_types[p]
-            data['players'][player_index]['kind'] = 'Bot'
+        for player_index, player in enumerate(self.player_types.keys()):
+            player_interaction = self.player_types[player]
+            data['players'][player_index]['kind'] = self.player_types[player].__name__
         return data
 
     @classmethod
@@ -216,6 +222,7 @@ def __main__():
     load_from_file = True
     if load_from_file:
         server = GameServer.load_game()
+        server.save()
     else:
         server = GameServer.new_game(GameServer.get_players())
     server.run()
