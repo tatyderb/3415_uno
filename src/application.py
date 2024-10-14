@@ -1,5 +1,6 @@
 import pygame as pygame
 
+from src.ui.game_view import GameView
 from ui.resource import RESOURCE as RSC
 
 
@@ -15,11 +16,16 @@ class Application:
         icon_img = pygame.image.load(RSC['image']['icon'])
         pygame.display.set_icon(icon_img)
 
+        self.vgame = GameView()
+
+
+
     def run(self):
         running = True
         self.display.fill('darkgreen', (0, 0, self.width, self.height))
         pygame.display.update(self.window_rect)
         while running:
+            self.vgame.draw(self.display)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT or event.type == pygame.KEYDOWN and event.key == pygame.K_q:
                     running = False

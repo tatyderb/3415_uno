@@ -4,8 +4,13 @@ RESOURCE = {
     "title": "UNO",
     "width": 800,
     "height": 600,
+    # 218 x 336
+    "card_width": 109,
+    "card_height": 178,
     "image": {
-        "icon": "ui/uno_icon.png"
+        "icon": "ui/uno_icon.png",
+        "card_img_base_dir": "img",
+        "back": "back.png"
     },
     "audio": {}
 }
