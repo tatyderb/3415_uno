@@ -4,6 +4,8 @@ RESOURCE = {
     "title": "UNO",
     "width": 800,
     "height": 600,
-    "image": {},
+    "image": {
+        "icon": "ui/uno_icon.png"
+    },
     "audio": {}
 }

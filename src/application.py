@@ -8,6 +8,9 @@ class Application:
         pygame.init()
         self.size = (self.width, self.height) = (RSC['width'], RSC['height'])
         self.display = pygame.display.set_mode(self.size)
+        pygame.display.set_caption(RSC['title'])
+        icon_img = pygame.image.load(RSC['image']['icon'])
+        pygame.display.set_icon(icon_img)
 
     def run(self):
         running = True
