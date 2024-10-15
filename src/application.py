@@ -18,8 +18,6 @@ class Application:
 
         self.vgame = GameView()
 
-
-
     def run(self):
         running = True
         clock = pygame.time.Clock()
