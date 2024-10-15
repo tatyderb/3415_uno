@@ -26,7 +26,8 @@ class Application:
             self.vgame.redraw(self.display)
             # реакция на клавиши и мышь
             for event in pygame.event.get():
-                if event.type == pygame.QUIT:
+                if event.type == pygame.QUIT or \
+                        event.type == pygame.KEYDOWN and event.key == pygame.K_q:
                     running = False
                 self.vgame.event_processing(event)
 
