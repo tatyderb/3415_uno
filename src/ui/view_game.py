@@ -2,7 +2,9 @@ import pygame
 
 from src.deck import Deck
 from src.card import Card
+from src.game_server import GameServer
 from src.hand import Hand
+from src.player_interactions import Bot
 from src.ui.view_card import ViewCard, Fly
 from src.ui.view_hand import ViewHand
 from src.ui.view_playzone import ViewPlayzone
@@ -11,13 +13,15 @@ from src.ui.view_playzone import ViewPlayzone
 class ViewGame:
     YGAP = 0
     XGAP = 30
-    def __init__(self):
+    def __init__(self, game_server: GameServer):
         # self.vcard = ViewCard(Card('b', 4), x=20, y=30)
+        self.check_restrictions(game_server)
         self.fly = Fly()
         rplayer1, rplayzone, rplayer2 = self.calculate_geom_contants()
-        self.vhand = ViewHand(Hand.load('b7 g3 y2 r9'), rplayer1)
-        self.playzone = ViewPlayzone(Card('b', 3), Deck(cards=None), rplayzone)
-        self.vhand_my = ViewHand(Hand.load('g4 r5 y1 y7 b3 y1'), rplayer2)
+        game = game_server.game_state
+        self.vhand = ViewHand(game.players[0].hand, rplayer1)
+        self.vhand_my = ViewHand(game.players[1].hand, rplayer2)
+        self.playzone = ViewPlayzone(game.top, game.deck, rplayzone)
 
 
     def calculate_geom_contants(self):
@@ -54,5 +58,16 @@ class ViewGame:
         self.vhand.event_processing(event)
         self.vhand_my.event_processing(event)
         self.playzone.event_processing(event)
+
+    def check_restrictions(self, game_server: GameServer):
+        """Проверяем, что 2 игрока и оба боты, потому что это ограничения текущей реализации."""
+        ptypes = game_server.player_types
+        if len(ptypes) != 2:
+            print("Играть могут только два бота.")
+            raise ValueError(f'"Играть могут только два бота. Загружено {len(game_server.player_types)} игрока"')
+
+        for player, ptype in ptypes.items():
+            if ptype != Bot:
+                raise ValueError(f'"Играть могут только два бота. Игрок {player.name} не бот."')
 
 

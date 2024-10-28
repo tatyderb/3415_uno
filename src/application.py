@@ -1,5 +1,6 @@
 import pygame
 
+from src.game_server import GameServer
 from src.resource import RESOURCE as RSC
 from src.ui.view_game import ViewGame
 
@@ -13,7 +14,10 @@ class Application:
         icon_img = pygame.image.load("ui/uno_icon.png")
         pygame.display.set_icon(icon_img)
 
-        self.vgame = ViewGame()
+        self.vgame = None
+
+    def set_game(self, game_server: GameServer):
+        self.vgame = ViewGame(game_server)
 
     def run(self):
         clock = pygame.time.Clock()
@@ -36,4 +40,6 @@ class Application:
 
 if __name__ == '__main__':
     app = Application()
+    gs = GameServer.load_game()
+    app.set_game(gs)
     app.run()
