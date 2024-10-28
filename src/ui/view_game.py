@@ -1,9 +1,11 @@
 import pygame
 
+from src.deck import Deck
 from src.card import Card
 from src.hand import Hand
 from src.ui.view_card import ViewCard, Fly
-from ui.view_hand import ViewHand
+from src.ui.view_hand import ViewHand
+from src.ui.view_playzone import ViewPlayzone
 
 
 class ViewGame:
@@ -14,16 +16,19 @@ class ViewGame:
         self.fly = Fly()
         rplayer1, rplayzone, rplayer2 = self.calculate_geom_contants()
         self.vhand = ViewHand(Hand.load('b7 g3 y2 r9'), rplayer1)
+        self.playzone = ViewPlayzone(Card('b', 3), Deck(cards=None), rplayzone)
+        self.vhand_my = ViewHand(Hand.load('g4 r5 y1 y7 b3 y1'), rplayer2)
+
 
     def calculate_geom_contants(self):
         screen_width, screen_height = pygame.display.get_window_size()
         card_width = ViewCard.WIDTH
         card_height = ViewCard.HEIGHT
-        self.YGAP = (screen_height - 3 * card_height) / 4
-        rplayer1 = pygame.Rect(self.XGAP, self.YGAP, screen_width - 2*self.XGAP, self.YGAP + card_height)
+        self.YGAP = (screen_height - 3 * card_height) // 4
+        rplayer1 = pygame.Rect(self.XGAP, self.YGAP, screen_width - 2*self.XGAP, card_height)
         # заглушки, потом надо написать формулы
-        rplayzone = pygame.Rect(0, 0, 0, 0)
-        rplayer2 = pygame.Rect(0, 0, 0, 0)
+        rplayzone = pygame.Rect(self.XGAP, self.YGAP*2 + card_height, screen_width - 2*self.XGAP, card_height)
+        rplayer2 = pygame.Rect(self.XGAP, self.YGAP*3 + 2*card_height, screen_width - 2*self.XGAP, card_height)
         return rplayer1, rplayzone, rplayer2
 
 
@@ -34,6 +39,8 @@ class ViewGame:
         display.fill('darkgreen')
         #self.vcard.redraw(display)
         self.vhand.redraw(display)
+        self.vhand_my.redraw(display)
+        self.playzone.redraw(display)
         self.fly.redraw(display)
         pygame.display.update()
 
@@ -45,4 +52,7 @@ class ViewGame:
         # if event.type == pygame.KEYDOWN and event.key == pygame.K_z:
         #     self.fly.begin(vcard=self.vcard, finish=(400, 300))
         self.vhand.event_processing(event)
+        self.vhand_my.event_processing(event)
+        self.playzone.event_processing(event)
+
 
