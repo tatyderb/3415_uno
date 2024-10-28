@@ -13,17 +13,30 @@ class ViewCard:
     BORDERY = RSC["border_y"]
 
     def __init__(self, card: Card, x: int = 0, y: int = 0, opened: bool = True):
+        self.img_front = None   # устанавливается при self.card = ...
         self.card = card
         self.x = x
         self.y = y
         self.opened = opened
         self.selected = False
-        img = pygame.image.load(f"img/{self.card.color}{self.card.number}.png")
         # print(img.get_size())
-        self.img_front = pygame.transform.scale(img, (ViewCard.WIDTH, ViewCard.HEIGHT))
         if self.IMAGE_BACK is None:
             img = pygame.image.load("img/back.png")
             self.IMAGE_BACK = pygame.transform.scale(img, (ViewCard.WIDTH, ViewCard.HEIGHT))
+
+    @property
+    def card(self):
+        return self.__card
+
+    @card.setter
+    def card(self, value: Card):
+        self.__card = value
+        if value is None:
+            self.img_front = None
+        else:
+            img = pygame.image.load(f"img/{self.card.color}{self.card.number}.png")
+            self.img_front = pygame.transform.scale(img, (ViewCard.WIDTH, ViewCard.HEIGHT))
+
 
     def __repr__(self):
         return f'{self.card} ({self.x}, {self.y})'
@@ -53,7 +66,8 @@ class ViewCard:
             img = self.img_front
         else:
             img = self.IMAGE_BACK
-        display.blit(img, (self.x, self.y))
+        if img:
+            display.blit(img, (self.x, self.y))
 
     def event_processing(self, event: pygame.event.Event):
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
@@ -88,13 +102,37 @@ class Fly:
         self.iterations: int = 0                # сколько уже пролетели
         self.animation_mode = False
 
-    def begin(self, vcard: ViewCard, finish: tuple[int, int], total_iterations: int = RSC["FPS"]):
+    @property
+    def card(self):
+        if self.vcard is None:
+            return None
+        return self.vcard.card
+
+    def begin(self, vcard: ViewCard, finish: tuple[int, int] | ViewCard, total_iterations: int = RSC["FPS"],
+              on_fly_end=None, **kwargs):
         self.vcard = vcard
         self.start = (vcard.x, vcard.y)
-        self.finish = finish
+        # if isinstance(finish, ViewCard):
+        #     print('Это карта')
+        #     self.finish = (finish.x, finish.y)
+        # else:
+        #     print('Это позиция')
+        #     self.finish = finish
+        print(f'{finish=} {type(finish)}')
+        if isinstance(finish, tuple):
+            print('Это позиция')
+            self.finish = finish
+        else:
+            print('Это карта')
+            pos = (finish.x, finish.y)
+            self.finish = pos
+        print(self.finish, type(self.finish))
         self.total_iterations = total_iterations
         self.iterations = 0
         self.animation_mode = True
+        # callback
+        self.on_fly_end = on_fly_end
+        self.on_fly_end_kwargs = kwargs
 
     def redraw(self, display: pygame.Surface):
         if self.animation_mode and self.vcard:
@@ -108,6 +146,7 @@ class Fly:
 
         if self.iterations >= self.total_iterations:
             self.end()
+            print('Fly end')
             return
 
         x0, y0 = self.start
@@ -116,11 +155,13 @@ class Fly:
         dy = (y1 - y0) / self.total_iterations
         self.vcard.x = x0 + dx * self.iterations
         self.vcard.y = y0 + dy * self.iterations
+        print(f'Fly {self.vcard}')
 
     def end(self):
         self.animation_mode = False
         self.vcard.x = self.finish[0]
         self.vcard.y = self.finish[1]
+        self.on_fly_end(**self.on_fly_end_kwargs)
 
 
 

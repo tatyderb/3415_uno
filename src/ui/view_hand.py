@@ -2,11 +2,12 @@ import pygame
 
 from src.resource import RESOURCE as RSC
 from src.hand import Hand
-from ui.view_card import ViewCard
+from src.ui.view_card import ViewCard
 
 
 class ViewHand:
     def __init__(self, hand: Hand, bound: pygame.Rect):
+        self.bound = bound
         self.vcards: list[ViewCard] = self.create_view_cards(hand, bound)
 
     def redraw(self, display: pygame.Surface):

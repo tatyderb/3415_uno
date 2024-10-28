@@ -17,6 +17,9 @@ class GameState:
     def current_player(self) -> Player:
         return self.players[self._current_player]
 
+    def current_player_index(self) -> int:
+        return self._current_player
+
     def __eq__(self, other):
         # return self.players == other.players and self.deck == other.deck and self.top == other.top and \
         #         self._current_player == other._current_player
