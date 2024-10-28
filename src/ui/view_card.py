@@ -18,12 +18,15 @@ class ViewCard:
         self.y = y
         self.opened = opened
         self.selected = False
-        img = pygame.image.load("img/r2.png")
+        img = pygame.image.load(f"img/{self.card.color}{self.card.number}.png")
         # print(img.get_size())
         self.img_front = pygame.transform.scale(img, (ViewCard.WIDTH, ViewCard.HEIGHT))
         if self.IMAGE_BACK is None:
             img = pygame.image.load("img/back.png")
             self.IMAGE_BACK = pygame.transform.scale(img, (ViewCard.WIDTH, ViewCard.HEIGHT))
+
+    def __repr__(self):
+        return f'{self.card} ({self.x}, {self.y})'
 
 
     def redraw(self, display: pygame.Surface):
