@@ -1,5 +1,6 @@
 RESOURCE = {
     "title": "UNO",
+    "FPS": 24,
     "width": 800,
     "height": 600,
     "card_width": 109,
