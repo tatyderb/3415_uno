@@ -88,10 +88,15 @@ class Fly:
         self.iterations: int = 0                # сколько уже пролетели
         self.animation_mode = False
 
-    def begin(self, vcard: ViewCard, finish: tuple[int, int], total_iterations: int = RSC["FPS"]):
+    def begin(self, vcard: ViewCard, finish: tuple[int, int] | ViewCard, total_iterations: int = RSC["FPS"]):
         self.vcard = vcard
         self.start = (vcard.x, vcard.y)
-        self.finish = finish
+        if isinstance(finish, ViewCard):
+            print(f'Это карта {finish}')
+            self.finish = (finish.x, finish.y)
+        else:
+            print(f'Это позиция {finish}')
+            self.finish = finish
         self.total_iterations = total_iterations
         self.iterations = 0
         self.animation_mode = True
@@ -105,6 +110,7 @@ class Fly:
             return
 
         self.iterations += 1
+        print(f'Fly: {self.vcard}')
 
         if self.iterations >= self.total_iterations:
             self.end()

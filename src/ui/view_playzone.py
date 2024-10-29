@@ -1,9 +1,9 @@
 """Top and Deck as View."""
 import pygame
 
-from card import Card
-from deck import Deck
-from ui.view_card import ViewCard
+from src.card import Card
+from src.deck import Deck
+from src.ui.view_card import ViewCard
 from src.resource import RESOURCE as RSC
 
 

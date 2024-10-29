@@ -12,10 +12,14 @@ class GameState:
         self.players: list[Player] = players
         self.deck: Deck = deck
         self.top: Card = top
-        self._current_player: int = current_player
+        self.__current_player: int = current_player
+
+    @property
+    def current_player_index(self):
+        return self.__current_player
 
     def current_player(self) -> Player:
-        return self.players[self._current_player]
+        return self.players[self.__current_player]
 
     def __eq__(self, other):
         # return self.players == other.players and self.deck == other.deck and self.top == other.top and \
@@ -26,7 +30,7 @@ class GameState:
             return False
         if self.top != other.top:
             return False
-        if self._current_player != other._current_player:
+        if self.__current_player != other.__current_player:
             return False
         return True
 
@@ -34,7 +38,7 @@ class GameState:
         return {
             "top": str(self.top),
             "deck": str(self.deck),
-            "current_player_index": self._current_player,
+            "current_player_index": self.__current_player,
             "players": [p.save() for p in self.players],
         }
 
@@ -76,7 +80,7 @@ class GameState:
     def next_player(self):
         """Ход переходит к следующему игроку."""
         n = len(self.players)
-        self._current_player = (self._current_player + 1) % n
+        self.__current_player = (self.__current_player + 1) % n
 
     def draw_card(self) -> Card:
         """Текущий игрок берет карту из колоды."""

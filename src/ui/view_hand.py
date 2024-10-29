@@ -2,19 +2,23 @@ import pygame
 
 from src.resource import RESOURCE as RSC
 from src.hand import Hand
-from ui.view_card import ViewCard
+from src.ui.view_card import ViewCard
 
 
 class ViewHand:
     def __init__(self, hand: Hand, bound: pygame.Rect):
-        self.vcards: list[ViewCard] = self.create_view_cards(hand, bound)
+        self.vcards: list[ViewCard | None] = self.create_view_cards(hand, bound)
 
     def redraw(self, display: pygame.Surface):
         for vc in self.vcards:
+            if vc is None:
+                continue
             vc.redraw(display)
 
     def event_processing(self, event: pygame.event.Event):
         for vc in self.vcards:
+            if vc is None:
+                continue
             vc.event_processing(event)
 
     def create_view_cards(self, hand: Hand, bound: pygame.Rect):

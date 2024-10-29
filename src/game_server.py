@@ -8,6 +8,7 @@ from src.hand import Hand
 from src.player import Player
 from src.player_interaction import PlayerInteraction
 import src.player_interactions as all_player_types
+from src.ui.event import post_event, EVENT_PLAY_CARD
 
 import logging
 
@@ -30,6 +31,7 @@ class GameServer:
     def __init__(self, player_types, game_state):
         self.game_state: GameState = game_state
         self.player_types: dict = player_types  # {player: PlayerInteractions}
+        self.current_phase = GamePhase.CHOOSE_CARD
 
     @classmethod
     def load_game(cls):
@@ -89,8 +91,10 @@ class GameServer:
         return res
 
     def run(self):
-        current_phase = GamePhase.CHOOSE_CARD
-        while current_phase != GamePhase.GAME_END:
+        while self.current_phase != GamePhase.GAME_END:
+            self.run_one_step()
+
+    def run_one_step(self):
             # 1. Possible code, but with more copy-paste
             # match current_phase:
             #     case CHOOSE_CARD:
@@ -107,7 +111,7 @@ class GameServer:
                 GamePhase.NEXT_PLAYER: self.next_player_phase,
                 GamePhase.DECLARE_WINNER: self.declare_winner_phase,
             }
-            current_phase = phases[current_phase]()
+            self.current_phase = phases[self.current_phase]()
 
             # 3. Can use naming convection to not declare phases explicitly,
             # but this may introduce errors later.
@@ -170,6 +174,7 @@ class GameServer:
         current_player.hand.remove_card(card)
         self.game_state.top = card
         self.inform_all("inform_card_drawn", current_player)
+        post_event(EVENT_PLAY_CARD, card=card, player_index=self.game_state.current_player_index)
         return GamePhase.NEXT_PLAYER
 
     def inform_all(self, method: str, *args, **kwargs):
