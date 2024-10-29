@@ -27,7 +27,7 @@ def test_init():
     )
     assert game.players == players
     assert game.deck == full_deck
-    assert game._current_player == 1
+    assert game.current_player() == bob
     assert str(game.top) == "y7"
 
 
@@ -50,11 +50,13 @@ def test_current_player():
 def test_eq():
     players = [alex, bob, charley]
     game1 = GameState(players=players, deck=full_deck, top=Card.load("y7"))
+    game1_copy = GameState(players=players.copy(), deck=Deck(game1.deck.cards.copy()), top=Card.load("y7"))
     game2 = GameState(players=players.copy(), deck=Deck(None), top=Card.load("y7"))
     # надо бы еще game с отличающимися на 1 другой параметр и всеми отличающимися
     game3 = GameState(players=players, deck=Deck.load("g2 y6 b0"), top=Card.load("y7"))
-    assert game1 == game2
-    assert game1 != game3
+    assert game1 == game1_copy
+    assert game1 != game2       # shuffled Deck
+    assert game1 != game3       # different Deck
 
 
 def test_save():
