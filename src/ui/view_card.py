@@ -13,17 +13,30 @@ class ViewCard:
     BORDERY = RSC["border_y"]
 
     def __init__(self, card: Card, x: int = 0, y: int = 0, opened: bool = True):
+        self.img_front = None
         self.card = card
         self.x = x
         self.y = y
         self.opened = opened
         self.selected = False
+
+    @property
+    def card(self):
+        return self.__card
+
+    @card.setter
+    def card(self, value):
+        if not isinstance(value, Card):
+            raise TypeError(f'Expected Card, got {type(value)}')
+        self.__card = value
         img = pygame.image.load(f"img/{self.card.color}{self.card.number}.png")
         # print(img.get_size())
         self.img_front = pygame.transform.scale(img, (ViewCard.WIDTH, ViewCard.HEIGHT))
         if self.IMAGE_BACK is None:
             img = pygame.image.load("img/back.png")
             self.IMAGE_BACK = pygame.transform.scale(img, (ViewCard.WIDTH, ViewCard.HEIGHT))
+
+
 
     def __repr__(self):
         return f'{self.card} ({self.x}, {self.y})'
