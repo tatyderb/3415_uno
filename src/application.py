@@ -11,8 +11,12 @@ class Application:
         self.size = (self.width, self.height) = (RSC['width'], RSC['height'])
         self.display = pygame.display.set_mode(self.size)
         pygame.display.set_caption("Uno")
-        icon_img = pygame.image.load("ui/uno_icon.png")
-        pygame.display.set_icon(icon_img)
+        try:
+            icon_img = pygame.image.load("ui/uno_icon.png")
+            pygame.display.set_icon(icon_img)
+        except FileNotFoundError:
+            # иконка по умолчанию, сделанную где-то потеряла.
+            pass
 
         self.vgame = None
 
@@ -42,7 +46,7 @@ class Application:
 
 if __name__ == '__main__':
     app = Application()
-    game_server = GameServer.load_game()
+    game_server = GameServer.load_game('uno.json')
     app.connect_with_game(game_server)
     # run строго после связки с game_server
     app.run()

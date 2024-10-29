@@ -1,6 +1,7 @@
 import inspect
 import json
 import sys
+from pathlib import Path
 
 from src.deck import Deck
 from src.game_state import GameState
@@ -34,9 +35,8 @@ class GameServer:
         self.current_phase = GamePhase.CHOOSE_CARD
 
     @classmethod
-    def load_game(cls):
+    def load_game(cls, filename: str | Path):
         # TODO: выбрать имя файла
-        filename = 'uno.json'
         with open(filename, 'r') as fin:
             data = json.load(fin)
             game_state = GameState.load(data)
@@ -48,8 +48,7 @@ class GameServer:
                 player_types[player] = kind
             return GameServer(player_types=player_types, game_state=game_state)
 
-    def save(self):
-        filename = 'uno.json'
+    def save(self, filename: str | Path):
         data = self.save_to_dict()
         with open(filename, 'w') as fout:
             json.dump(data, fout, indent=4)
@@ -244,10 +243,10 @@ class GameServer:
 def __main__():
     load_from_file = False
     if load_from_file:
-        server = GameServer.load_game()
-        server.save()
+        server = GameServer.load_game('uno.json')
     else:
         server = GameServer.new_game(GameServer.get_players())
+    server.save('uno.json')
     server.run()
 
 
