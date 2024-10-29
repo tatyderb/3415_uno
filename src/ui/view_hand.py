@@ -6,6 +6,7 @@ from src.ui.view_card import ViewCard
 
 
 class ViewHand:
+    CARD_XGAP = RSC["card_xgap"]
     def __init__(self, hand: Hand, bound: pygame.Rect):
         self.vcards: list[ViewCard | None] = self.create_view_cards(hand, bound)
         self.bound = bound
@@ -34,10 +35,15 @@ class ViewHand:
         print('Hand Bounds:', bx, by, bw, bh)
         vcards = []
         for n, card in enumerate(hand):
-            vcard = ViewCard(card, x=bx + n * (ViewCard.WIDTH + RSC["card_xgap"]), y=by)
+            vcard = ViewCard(card, x=bx + n * (ViewCard.WIDTH + self.CARD_XGAP), y=by)
             print(f'Add view card {vcard}')
             vcards.append(vcard)
         return vcards
+
+    def next_card_position(self) -> tuple[int, int]:
+        """Позиция следующей карты в руке, куда ее можно положить."""
+        vc_end = self.vcards[-1]
+        return vc_end.x + ViewCard.WIDTH + self.CARD_XGAP, vc_end.y
 
 
 

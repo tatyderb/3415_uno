@@ -6,7 +6,7 @@ from src.ui.view_card import ViewCard, Fly
 from src.ui.view_hand import ViewHand
 from src.ui.view_playzone import ViewPlayzone
 from src.resource import RESOURCE as RSC
-from src.ui.event import post_event, EVENT_PLAY_CARD
+from src.ui.event import post_event, EVENT_PLAY_CARD, EVENT_DRAW_CARD
 
 
 class ViewGame:
@@ -73,6 +73,13 @@ class ViewGame:
             card = data['card']
             player_index = data['player_index']
             self.on_play_card(card=card, player_index=player_index)
+        if event.type == EVENT_DRAW_CARD:
+            data = event.user_data
+            print(f'EVENT_PLAY_CARD user_data={data}')
+            card = data['card']
+            player_index = data['player_index']
+            self.on_draw_card(card=card, player_index=player_index)
+
         # self.vcard.event_processing(event)
         # if event.type == pygame.KEYDOWN and event.key == pygame.K_z:
         #     self.fly.begin(vcard=self.vcard, finish=(400, 300))
@@ -81,7 +88,7 @@ class ViewGame:
         self.playzone.event_processing(event)
 
     def on_play_card(self, card: Card, player_index: int):
-        """Начинаем анимацию полета карты."""
+        """Начинаем анимацию полета карты с руки в отбой (top)."""
         if player_index == 0:
             vhand = self.vhand
         else:
@@ -95,8 +102,32 @@ class ViewGame:
         self.fly.begin(vcard=vc, finish=self.playzone.vtop,
                        on_end=self.end_card_playing, player_index=player_index)
 
+    def on_draw_card(self, card: Card, player_index: int):
+        """Начинаем анимацию полета карты (из колоды в конец руки)."""
+        if player_index == 0:
+            vhand = self.vhand
+        else:
+            vhand = self.vhand_my
+
+        # deck position
+        vdeck = self.playzone.vdeck
+        vc = ViewCard(card=card, x=vdeck.x, y=vdeck.y, opened=False)
+        # конец руки
+        self.fly.begin(vcard=vc, finish=vhand.next_card_position(),
+                       on_end=self.end_draw_card, player_index=player_index)
+
     def end_card_playing(self, **kwargs):
         """В конце анимации игры карты надо перерисовать (для этого пересоздать) VHand этого игрока."""
+        player_index = kwargs['player_index']
+        player = self.game.game_state.players[player_index]
+        if player_index == 0:
+            self.vhand = ViewHand(player.hand, self.vhand.bound)
+        else:
+            self.vhand_my = ViewHand(player.hand, self.vhand_my.bound)
+        self.playzone.vtop.card = self.game.game_state.top
+
+    def end_draw_card(self, **kwargs):
+        """В конце анимации взятия карты надо перерисовать (для этого пересоздать) VHand этого игрока."""
         player_index = kwargs['player_index']
         player = self.game.game_state.players[player_index]
         if player_index == 0:

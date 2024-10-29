@@ -9,7 +9,7 @@ from src.hand import Hand
 from src.player import Player
 from src.player_interaction import PlayerInteraction
 import src.player_interactions as all_player_types
-from src.ui.event import post_event, EVENT_PLAY_CARD
+from src.ui.event import post_event, EVENT_PLAY_CARD, EVENT_DRAW_CARD
 
 import logging
 
@@ -21,6 +21,7 @@ from src.player_interactions import Bot
 class GamePhase(enum.StrEnum):
     CHOOSE_CARD = "Choose card"
     DRAW_EXTRA = "Draw extra card"
+    CHOOSE_CARD_AGAIN = "Choose card again"
     NEXT_PLAYER = "Switch current player"
     DECLARE_WINNER = "Declare a winner"
     GAME_END = "Game ended"
@@ -106,6 +107,7 @@ class GameServer:
             # 2. Suggested code - minimal and still easy to read
             phases = {
                 GamePhase.CHOOSE_CARD: self.choose_card_phase,
+                GamePhase.CHOOSE_CARD_AGAIN: self.choose_card_again_phase,
                 GamePhase.DRAW_EXTRA: self.draw_extra_phase,
                 GamePhase.NEXT_PLAYER: self.next_player_phase,
                 GamePhase.DECLARE_WINNER: self.declare_winner_phase,
@@ -133,8 +135,15 @@ class GameServer:
         card = self.game_state.draw_card()
         print(f"Player {current_player} draws {card}")
         self.inform_all("inform_card_drawn", current_player)
+        post_event(EVENT_DRAW_CARD, card=card, player_index=self.game_state.current_player_index)
+        return GamePhase.CHOOSE_CARD_AGAIN
 
-        if card.can_play_on(self.game_state.top):
+    def choose_card_again_phase(self) -> GamePhase:
+        current_player = self.game_state.current_player()
+        playable_cards = current_player.hand.playable_cards(self.game_state.top)
+        if playable_cards:
+            # играть может только вновь взятая карта, остальные не подходят
+            card = playable_cards[0]
             print(f"Player {current_player} can play drawn card")
             if self.player_types[current_player].choose_to_play(
                 self.game_state.top, card
@@ -143,6 +152,7 @@ class GameServer:
                 current_player.hand.remove_card(card)
                 self.game_state.top = card
                 self.inform_all("inform_card_played", current_player, card)
+                post_event(EVENT_PLAY_CARD, card=card, player_index=self.game_state.current_player_index)
             else:
                 print(f"Player decides not to play {card}")
 
