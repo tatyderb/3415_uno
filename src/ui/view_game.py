@@ -92,5 +92,16 @@ class ViewGame:
                 # делаем дырку в руке, не карта, а пусто
                 vhand.vcards[ivc] = None
                 break
-        self.fly.begin(vcard=vc, finish=self.playzone.vtop)
+        self.fly.begin(vcard=vc, finish=self.playzone.vtop,
+                       on_end=self.end_card_playing, player_index=player_index)
+
+    def end_card_playing(self, **kwargs):
+        """В конце анимации игры карты надо перерисовать (для этого пересоздать) VHand этого игрока."""
+        player_index = kwargs['player_index']
+        player = self.game.game_state.players[player_index]
+        if player_index == 0:
+            self.vhand = ViewHand(player.hand, self.vhand.bound)
+        else:
+            self.vhand_my = ViewHand(player.hand, self.vhand_my.bound)
+
 

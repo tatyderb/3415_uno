@@ -8,6 +8,7 @@ from src.ui.view_card import ViewCard
 class ViewHand:
     def __init__(self, hand: Hand, bound: pygame.Rect):
         self.vcards: list[ViewCard | None] = self.create_view_cards(hand, bound)
+        self.bound = bound
 
     def redraw(self, display: pygame.Surface):
         for vc in self.vcards:

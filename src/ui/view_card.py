@@ -87,8 +87,17 @@ class Fly:
         self.total_iterations: int = 0          # за сколько итераций пролетим от старта до финиша
         self.iterations: int = 0                # сколько уже пролетели
         self.animation_mode = False
+        # callback
+        self.on_end = None          # функцию, которую вызовем в конце анимации
+        self.on_end_kwargs = {}     # аргументы этой функции
 
-    def begin(self, vcard: ViewCard, finish: tuple[int, int] | ViewCard, total_iterations: int = RSC["FPS"]):
+    def begin(self,
+              vcard: ViewCard,
+              finish: tuple[int, int] | ViewCard,
+              total_iterations: int = RSC["FPS"],
+              on_end=None,
+              **kwargs,
+              ):
         self.vcard = vcard
         self.start = (vcard.x, vcard.y)
         if isinstance(finish, ViewCard):
@@ -100,6 +109,8 @@ class Fly:
         self.total_iterations = total_iterations
         self.iterations = 0
         self.animation_mode = True
+        self.on_end = on_end
+        self.on_end_kwargs = kwargs
 
     def redraw(self, display: pygame.Surface):
         if self.animation_mode and self.vcard:
@@ -127,6 +138,7 @@ class Fly:
         self.animation_mode = False
         self.vcard.x = self.finish[0]
         self.vcard.y = self.finish[1]
+        self.on_end(**self.on_end_kwargs)
 
 
 
