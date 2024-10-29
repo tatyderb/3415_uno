@@ -12,7 +12,7 @@ class Application:
         self.display = pygame.display.set_mode(self.size)
         pygame.display.set_caption("Uno")
         try:
-            icon_img = pygame.image.load("ui/uno_icon.png")
+            icon_img = pygame.image.load("img/uno_icon.png")
             pygame.display.set_icon(icon_img)
         except FileNotFoundError:
             # иконка по умолчанию, сделанную где-то потеряла.
