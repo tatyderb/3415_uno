@@ -2,6 +2,7 @@ import pygame
 
 from src.deck import Deck
 from src.card import Card
+from src.game_server import GameServer
 from src.hand import Hand
 from src.ui.view_card import ViewCard, Fly
 from src.ui.view_hand import ViewHand
@@ -11,13 +12,15 @@ from src.ui.view_playzone import ViewPlayzone
 class ViewGame:
     YGAP = 0
     XGAP = 30
-    def __init__(self):
+    def __init__(self, game_server: GameServer):
         # self.vcard = ViewCard(Card('b', 4), x=20, y=30)
+        self.game = game_server
         self.fly = Fly()
         rplayer1, rplayzone, rplayer2 = self.calculate_geom_contants()
-        self.vhand = ViewHand(Hand.load('b7 g3 y2 r9'), rplayer1)
-        self.playzone = ViewPlayzone(Card('b', 3), Deck(cards=None), rplayzone)
-        self.vhand_my = ViewHand(Hand.load('g4 r5 y1 y7 b3 y1'), rplayer2)
+        game = game_server.game_state
+        self.playzone = ViewPlayzone(top=game.top, deck=game.deck, bounds=rplayzone)
+        self.vhand = ViewHand(game.players[0].hand, rplayer1)
+        self.vhand_my = ViewHand(game.players[1].hand, rplayer2)
 
 
     def calculate_geom_contants(self):

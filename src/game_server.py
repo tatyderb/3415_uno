@@ -13,6 +13,8 @@ import logging
 
 import enum
 
+from src.player_interactions import Bot
+
 
 class GamePhase(enum.StrEnum):
     CHOOSE_CARD = "Choose card"
@@ -222,6 +224,16 @@ class GameServer:
             except AttributeError:
                 print(f"Allowed player types are: {player_types_as_str}")
         return name, kind
+
+    def check_data_for_gui(self):
+        """Так как в GUI костыль, то игроков должно быть строго 2 и они - боты."""
+        ptypes = self.player_types
+        if len(ptypes) != 2:
+            raise ValueError(f'Игроков должно быть 2,  по факту {len(ptypes)}')
+        for player, player_type in ptypes.items():
+            if player_type != Bot:
+                raise ValueError(f'Все игроки должны быть боты, игрок {player.name} типа {player_type}')
+
 
 
 def __main__():

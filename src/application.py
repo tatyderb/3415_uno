@@ -1,5 +1,6 @@
 import pygame
 
+from src.game_server import GameServer
 from src.resource import RESOURCE as RSC
 from src.ui.view_game import ViewGame
 
@@ -13,7 +14,8 @@ class Application:
         icon_img = pygame.image.load("ui/uno_icon.png")
         pygame.display.set_icon(icon_img)
 
-        self.vgame = ViewGame()
+        self.vgame = None
+
 
     def run(self):
         clock = pygame.time.Clock()
@@ -33,7 +35,14 @@ class Application:
                 self.vgame.event_processing(event)
             clock.tick(RSC["FPS"])
 
+    def connect_with_game(self, game_server: GameServer):
+        game_server.check_data_for_gui()
+        self.vgame = ViewGame(game_server)
+
 
 if __name__ == '__main__':
     app = Application()
+    game_server = GameServer.load_game()
+    app.connect_with_game(game_server)
+    # run строго после связки с game_server
     app.run()
