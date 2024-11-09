@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import pygame
 
 from src.card import Card
@@ -6,7 +8,7 @@ from src.ui.view_card import ViewCard, Fly
 from src.ui.view_hand import ViewHand
 from src.ui.view_playzone import ViewPlayzone
 from src.resource import RESOURCE as RSC
-from src.ui.event import post_event, EVENT_PLAY_CARD, EVENT_DRAW_CARD
+from src.ui.event import post_event, EVENT_PLAY_CARD, EVENT_DRAW_CARD, EVENT_DECLARE_WINNER
 
 
 class ViewGame:
@@ -24,6 +26,8 @@ class ViewGame:
         # таймер обратного отсчета в тиках, сколько тиков осталось думать боту
         self.bot_thinking: int = 0
         self.begin_bot_thinking()  # если Human, то надо ли это?
+
+        self.banner = None    # так мы проверяли работу надписи: Banner('Test my font', self.vhand.bound)
 
     def calculate_geom_contants(self):
         screen_width, screen_height = pygame.display.get_window_size()
@@ -61,6 +65,8 @@ class ViewGame:
         self.vhand_my.redraw(display)
         self.playzone.redraw(display)
         self.fly.redraw(display)
+        if self.banner:
+            self.banner.redraw(display)
         pygame.display.update()
 
     def event_processing(self, event: pygame.event.Event):
@@ -75,10 +81,16 @@ class ViewGame:
             self.on_play_card(card=card, player_index=player_index)
         if event.type == EVENT_DRAW_CARD:
             data = event.user_data
-            print(f'EVENT_PLAY_CARD user_data={data}')
+            print(f'EVENT_DRAW_CARD user_data={data}')
             card = data['card']
             player_index = data['player_index']
             self.on_draw_card(card=card, player_index=player_index)
+        if event.type == EVENT_DECLARE_WINNER:
+            data = event.user_data
+            print(f'EVENT_DECLARE_WINNER user_data={data}')
+            player_index = data['player_index']
+            self.on_declare_winner(player_index=player_index)
+
 
         # self.vcard.event_processing(event)
         # if event.type == pygame.KEYDOWN and event.key == pygame.K_z:
@@ -135,4 +147,24 @@ class ViewGame:
         else:
             self.vhand_my = ViewHand(player.hand, self.vhand_my.bound)
 
+    def on_declare_winner(self, player_index):
+        if player_index == 0:
+            vhand = self.vhand
+        else:
+            vhand = self.vhand_my
+        self.banner = Banner("Winner", vhand.bound)
 
+
+class Banner:
+    # BIG_FONT = pygame.font.SysFont('serif', 48)
+
+    def __init__(self, text: str, bound: pygame.Rect):
+        path = Path(__file__).parent / '../fonts/04B_19.TTF'
+        path = path.resolve()
+        self.BIG_FONT = pygame.font.Font(path, 50)
+        self.text = self.BIG_FONT.render(text, True, 'orange')
+        self.text_rect = self.text.get_rect(center=bound.center)
+
+    def redraw(self, display: pygame.Surface):
+        if self.text:
+            display.blit(self.text, self.text_rect)

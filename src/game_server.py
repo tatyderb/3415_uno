@@ -9,7 +9,7 @@ from src.hand import Hand
 from src.player import Player
 from src.player_interaction import PlayerInteraction
 import src.player_interactions as all_player_types
-from src.ui.event import post_event, EVENT_PLAY_CARD, EVENT_DRAW_CARD
+from src.ui.event import post_event, EVENT_PLAY_CARD, EVENT_DRAW_CARD, EVENT_DECLARE_WINNER
 
 import logging
 
@@ -121,7 +121,9 @@ class GameServer:
 
     def declare_winner_phase(self) -> GamePhase:
         print(f"{self.game_state.current_player()} is the winner!")
-        return GamePhase.GAME_END
+        post_event(EVENT_DECLARE_WINNER, player_index=self.game_state.current_player_index)
+        # return GamePhase.GAME_END
+        return GamePhase.DECLARE_WINNER
 
     def next_player_phase(self) -> GamePhase:
         if not self.game_state.current_player().hand.cards:
