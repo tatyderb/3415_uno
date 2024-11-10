@@ -1,8 +1,11 @@
 import pygame
+from enum import auto, IntEnum
 
-EVENT_PLAY_CARD = pygame.USEREVENT + 1   # +2, +3, ....
-EVENT_DRAW_CARD = pygame.USEREVENT + 2
-EVENT_DECLARE_WINNER = pygame.USEREVENT + 3
+
+class CustomEvents(IntEnum):
+    EVENT_PLAY_CARD = pygame.USEREVENT + 1  # +2, +3, ....
+    EVENT_DRAW_CARD = auto()
+    EVENT_DECLARE_WINNER = auto()
 
 
 def post_event(event_type: int, **kwargs):

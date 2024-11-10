@@ -8,7 +8,7 @@ from src.ui.view_card import ViewCard, Fly
 from src.ui.view_hand import ViewHand
 from src.ui.view_playzone import ViewPlayzone
 from src.resource import RESOURCE as RSC
-from src.ui.event import post_event, EVENT_PLAY_CARD, EVENT_DRAW_CARD, EVENT_DECLARE_WINNER
+from src.ui.event import post_event, CustomEvents
 
 
 class ViewGame:
@@ -73,22 +73,22 @@ class ViewGame:
         # пока идет анимация, никакой реакции на действия пользователя!
         if self.fly.animation_mode:
             return
-        if event.type == EVENT_PLAY_CARD:
+        if event.type == CustomEvents.EVENT_PLAY_CARD:
             data = event.user_data
-            print(f'EVENT_PLAY_CARD user_data={data}')
-            card = data['card']
-            player_index = data['player_index']
+            print(f"{CustomEvents(event.type).name} user_data={data}")
+            card = data["card"]
+            player_index = data["player_index"]
             self.on_play_card(card=card, player_index=player_index)
-        if event.type == EVENT_DRAW_CARD:
+        if event.type == CustomEvents.EVENT_DRAW_CARD:
             data = event.user_data
-            print(f'EVENT_DRAW_CARD user_data={data}')
-            card = data['card']
-            player_index = data['player_index']
+            print(f"{CustomEvents(event.type).name} user_data={data}")
+            card = data["card"]
+            player_index = data["player_index"]
             self.on_draw_card(card=card, player_index=player_index)
-        if event.type == EVENT_DECLARE_WINNER:
+        if event.type == CustomEvents.EVENT_DECLARE_WINNER:
             data = event.user_data
-            print(f'EVENT_DECLARE_WINNER user_data={data}')
-            player_index = data['player_index']
+            print(f"{CustomEvents(event.type).name} user_data={data}")
+            player_index = data["player_index"]
             self.on_declare_winner(player_index=player_index)
 
 

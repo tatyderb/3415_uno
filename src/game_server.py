@@ -9,7 +9,7 @@ from src.hand import Hand
 from src.player import Player
 from src.player_interaction import PlayerInteraction
 import src.player_interactions as all_player_types
-from src.ui.event import post_event, EVENT_PLAY_CARD, EVENT_DRAW_CARD, EVENT_DECLARE_WINNER
+from src.ui.event import post_event, CustomEvents
 
 import logging
 
@@ -121,7 +121,10 @@ class GameServer:
 
     def declare_winner_phase(self) -> GamePhase:
         print(f"{self.game_state.current_player()} is the winner!")
-        post_event(EVENT_DECLARE_WINNER, player_index=self.game_state.current_player_index)
+        post_event(
+            CustomEvents.EVENT_DECLARE_WINNER,
+            player_index=self.game_state.current_player_index,
+        )
         # return GamePhase.GAME_END
         return GamePhase.DECLARE_WINNER
 
@@ -137,7 +140,11 @@ class GameServer:
         card = self.game_state.draw_card()
         print(f"Player {current_player} draws {card}")
         self.inform_all("inform_card_drawn", current_player)
-        post_event(EVENT_DRAW_CARD, card=card, player_index=self.game_state.current_player_index)
+        post_event(
+            CustomEvents.EVENT_DRAW_CARD,
+            card=card,
+            player_index=self.game_state.current_player_index,
+        )
         return GamePhase.CHOOSE_CARD_AGAIN
 
     def choose_card_again_phase(self) -> GamePhase:
@@ -154,7 +161,11 @@ class GameServer:
                 current_player.hand.remove_card(card)
                 self.game_state.top = card
                 self.inform_all("inform_card_played", current_player, card)
-                post_event(EVENT_PLAY_CARD, card=card, player_index=self.game_state.current_player_index)
+                post_event(
+                    CustomEvents.EVENT_PLAY_CARD,
+                    card=card,
+                    player_index=self.game_state.current_player_index,
+                )
             else:
                 print(f"Player decides not to play {card}")
 
@@ -185,7 +196,11 @@ class GameServer:
         current_player.hand.remove_card(card)
         self.game_state.top = card
         self.inform_all("inform_card_drawn", current_player)
-        post_event(EVENT_PLAY_CARD, card=card, player_index=self.game_state.current_player_index)
+        post_event(
+            CustomEvents.EVENT_PLAY_CARD,
+            card=card,
+            player_index=self.game_state.current_player_index,
+        )
         return GamePhase.NEXT_PLAYER
 
     def inform_all(self, method: str, *args, **kwargs):
