@@ -14,6 +14,7 @@ class Card:
             raise ValueError
         self.color = color
         self.number = number
+        self.chosen = False     # эта карта была выбрана игроком
 
     def __repr__(self):
         # 'r3'

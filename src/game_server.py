@@ -9,6 +9,7 @@ from src.hand import Hand
 from src.player import Player
 from src.player_interaction import PlayerInteraction
 import src.player_interactions as all_player_types
+from src.player_interactions.human_pygame_player import AWAITING_INTERACTION
 from src.ui.event import post_event, CustomEvent
 
 import logging
@@ -180,6 +181,10 @@ class GameServer:
             print(f"Player {current_player.name} skipped a turn")
             return GamePhase.DRAW_EXTRA
 
+        # если интерактивный игрок и ждем его действий, остаемся в той же фазе модели
+        if isinstance(card, AWAITING_INTERACTION):
+            return GamePhase.CHOOSE_CARD
+
         assert card in playable_cards
         print(f"Player {current_player.name} played {card}")
         current_player.hand.remove_card(card)
@@ -242,13 +247,16 @@ class GameServer:
         return name, kind
 
     def check_data_for_gui(self):
-        """Так как в GUI костыль, то игроков должно быть строго 2 и они - боты."""
+        """Так как в GUI костыль, то игроков должно быть строго 2. Интерактивных игроков не больше 1."""
         ptypes = self.player_types
         if len(ptypes) != 2:
             raise ValueError(f'Игроков должно быть 2,  по факту {len(ptypes)}')
+        interactive_player_counter = 0
         for player, player_type in ptypes.items():
             if player_type != Bot:
-                raise ValueError(f'Все игроки должны быть боты, игрок {player.name} типа {player_type}')
+                interactive_player_counter += 1
+        if interactive_player_counter > 1:
+            raise ValueError(f'Интерактивных игроков должно быть 1 или меньше, сейчас {interactive_player_counter}.')
 
 
 

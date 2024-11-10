@@ -19,6 +19,7 @@ class ViewCard:
         self.y = y
         self.opened = opened
         self.selected = False
+        self.chooseable = False     # карта тыкабельна мышкой для выбора карты
 
     @property
     def card(self):
