@@ -1,0 +1,19 @@
+{
+    "top": "r2",
+    "deck": "b5 g4 y1 r4 b8 y8 b3 y6 b9 b4 g5 y2 g2 g8 b5 b2 b6 r1 r7 g3 r3 y7 g7 g8 b8 b3 g6 r0 b1 y8 y1 b1 y9 g1 g6 r5 y7 r8 y2 b2 r6 r2 y6 g4 y4 r7 g9 r9 y4 g5 r9 r3 y0 r4 y3 g1 y3 g0 r6 b7 g9 b4 b6",
+    "current_player_index": 0,
+    "players": [
+        {
+            "name": "Bob",
+            "hand": "g3 g8",
+            "score": 0,
+            "kind": "Bot"
+        },
+        {
+            "name": "Alex",
+            "hand": "g2 y3",
+            "score": 0,
+            "kind": "Bot"
+        }
+    ]
+}
