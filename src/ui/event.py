@@ -7,6 +7,7 @@ class CustomEvents(IntEnum):
     EVENT_DRAW_CARD = auto()
     EVENT_DECLARE_WINNER = auto()
     EVENT_CHANGE_INTERACTIVE_CARDS = auto()
+    AWAITING_GUI = auto()
 
 
 def post_event(event_type: int, **kwargs):

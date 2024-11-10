@@ -186,6 +186,9 @@ class GameServer:
         card = self.player_types[current_player].choose_card(
             current_player.hand, self.game_state.top
         )
+        if type(card) == CustomEvents:
+            assert card == CustomEvents.AWAITING_GUI
+            return GamePhase.CHOOSE_CARD
 
         if card is None:
             print(f"Player {current_player.name} skipped a turn")
