@@ -73,7 +73,11 @@ class ViewGame:
         # пока идет анимация, никакой реакции на действия пользователя!
         if self.fly.animation_mode:
             return
-        if isinstance(event.type, CustomEvent):
+        # игнорируем все движения мыши, нас интересуют только клики
+        if event.type == pygame.MOUSEMOTION:
+            return
+
+        if event.type == CustomEvent:
             print(f"USER EVENT {event.type}")
         match event.type:
             case CustomEvent.PLAY_CARD:

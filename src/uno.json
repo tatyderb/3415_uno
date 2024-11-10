@@ -11,7 +11,7 @@
         },
         {
             "name": "Alex",
-            "hand": "g2 y3",
+            "hand": "g2 y3 r5",
             "score": 0,
             "kind": "HumanGUI"
         }

@@ -2,6 +2,7 @@ import pygame
 
 from src.resource import RESOURCE as RSC
 from src.hand import Hand
+from src.ui.event import CustomEvent
 from src.ui.view_card import ViewCard
 
 
@@ -18,6 +19,27 @@ class ViewHand:
             vc.redraw(display)
 
     def event_processing(self, event: pygame.event.Event):
+        # снимаем выделение со всех карт
+        if event.type == CustomEvent.UNSELECT_INTERACTIVE_CARDS:
+            for vc in self.vcards:
+                vc.chooseable = False
+                vc.selected = False
+
+        # ставим выделение на играбельные карты
+        if event.type == CustomEvent.SELECT_INTERACTIVE_CARDS:
+            cards = event.user_data['cards']
+            for vc in self.vcards:
+                if vc.card in cards:
+                    vc.chooseable = True
+                    vc.selected = True
+
+        # если движуха вне руки, игнорируем ивенты
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if pygame.mouse.get_pressed()[0]:
+                x, y = pygame.mouse.get_pos()
+                if not self.bound.collidepoint(x, y):
+                    return
+
         for vc in self.vcards:
             if vc is None:
                 continue

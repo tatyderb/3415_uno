@@ -8,7 +8,7 @@ class ViewCard:
     WIDTH = RSC["card_width"]
     HEIGHT = RSC["card_height"]
     IMAGE_BACK = None
-    SELECTED_COLOR = 'yellow'
+    SELECTED_COLOR = 'magenta'
     BORDERX = RSC["border_x"]
     BORDERY = RSC["border_y"]
 
@@ -70,9 +70,9 @@ class ViewCard:
         display.blit(img, (self.x, self.y))
 
     def event_processing(self, event: pygame.event.Event):
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-            print(f'Select!')
-            self.select()
+        # в эту карту бесполезно тыкать, ее нельзя выбрать
+        if not self.chooseable:
+            return
 
         if event.type == pygame.MOUSEBUTTONDOWN:
             # нажали на левую кнопку мыши
@@ -83,7 +83,7 @@ class ViewCard:
                 x, y = pygame.mouse.get_pos()
                 r = pygame.Rect(self.x, self.y, self.WIDTH, self.HEIGHT)
                 if r.collidepoint(x, y):
-                    self.flip()
+                    self.card.chosen = True
 
     def flip(self):
         self.opened = not self.opened
