@@ -6,6 +6,7 @@ class CustomEvents(IntEnum):
     EVENT_PLAY_CARD = pygame.USEREVENT + 1  # +2, +3, ....
     EVENT_DRAW_CARD = auto()
     EVENT_DECLARE_WINNER = auto()
+    EVENT_CHANGE_INTERACTIVE_CARDS = auto()
 
 
 def post_event(event_type: int, **kwargs):

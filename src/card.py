@@ -14,6 +14,8 @@ class Card:
             raise ValueError
         self.color = color
         self.number = number
+        # for GUI
+        self.chosen = False
 
     def __repr__(self):
         # 'r3'

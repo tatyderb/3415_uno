@@ -19,6 +19,7 @@ class ViewCard:
         self.y = y
         self.opened = opened
         self.selected = False
+        self.chooseable = False
 
     @property
     def card(self):
@@ -79,10 +80,12 @@ class ViewCard:
             # 0 - 1 - 2
             # 0 - 1 - 2 - 3 - 4
             if pygame.mouse.get_pressed()[0]:
+                if not self.chooseable:
+                    return
                 x, y = pygame.mouse.get_pos()
                 r = pygame.Rect(self.x, self.y, self.WIDTH, self.HEIGHT)
                 if r.collidepoint(x, y):
-                    self.flip()
+                    self.card.chosen = True
 
     def flip(self):
         self.opened = not self.opened

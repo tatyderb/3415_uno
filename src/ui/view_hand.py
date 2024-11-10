@@ -2,6 +2,7 @@ import pygame
 
 from src.resource import RESOURCE as RSC
 from src.hand import Hand
+from src.ui.event import CustomEvents
 from src.ui.view_card import ViewCard
 
 
@@ -18,6 +19,12 @@ class ViewHand:
             vc.redraw(display)
 
     def event_processing(self, event: pygame.event.Event):
+        if event.type == CustomEvents.EVENT_CHANGE_INTERACTIVE_CARDS:
+            data = event.user_data
+            print(f"EVENT_CHANGE_INTERACTIVE_CARDS user_data={data}")
+            cards = data["cards"]
+            for vcard in self.vcards:
+                vcard.chooseable = vcard.card in cards
         for vc in self.vcards:
             if vc is None:
                 continue
