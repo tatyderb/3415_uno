@@ -19,6 +19,11 @@ class ViewHand:
             vc.redraw(display)
 
     def event_processing(self, event: pygame.event.Event):
+        if pygame.mouse.get_pressed()[0]:
+            x, y = pygame.mouse.get_pos()
+            r = self.bound
+            if not r.collidepoint(x, y):
+                return
         if event.type == CustomEvents.EVENT_CHANGE_INTERACTIVE_CARDS:
             data = event.user_data
             print(f"EVENT_CHANGE_INTERACTIVE_CARDS user_data={data}")
