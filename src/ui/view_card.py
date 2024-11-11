@@ -85,11 +85,7 @@ class ViewCard:
                     self.chooseable = True
                     self.selected = True
 
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-            print(f'Select!')
-            self.select()
-
-        if event.type == pygame.MOUSEBUTTONDOWN:
+        if event.type == pygame.MOUSEBUTTONDOWN and self.chooseable:
             # нажали на левую кнопку мыши
             # нажата левая кнопка
             # 0 - 1 - 2
@@ -98,7 +94,7 @@ class ViewCard:
                 x, y = pygame.mouse.get_pos()
                 r = pygame.Rect(self.x, self.y, self.WIDTH, self.HEIGHT)
                 if r.collidepoint(x, y):
-                    self.flip()
+                    self.card.chosen = True
 
     def flip(self):
         self.opened = not self.opened
