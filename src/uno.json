@@ -13,7 +13,7 @@
             "name": "Alex",
             "hand": "g2 y3",
             "score": 0,
-            "kind": "Bot"
+            "kind": "HumanGUI"
         }
     ]
 }
