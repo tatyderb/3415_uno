@@ -93,14 +93,22 @@ class ViewGame:
                 print(f'{CustomEvent(event.type).name} user_data={data}')
                 player_index = data['player_index']
                 self.on_declare_winner(player_index=player_index)
+            case CustomEvent.SELECT_INTERACTIVE_CARDS:
+                data = event.user_data
+                print(f'event_processing->{CustomEvent(event.type).name} user_data={data}')
+                if self.game.game_state.current_player_index == 0:
+                    vhand = self.vhand
+                    print('верхний игрок')
+                else:
+                    vhand = self.vhand_my
+                    print('нижний игрок')
+                vhand.event_processing(event)
+            case _:
+                # все остальные события
+                self.vhand.event_processing(event)
+                self.vhand_my.event_processing(event)
+                self.playzone.event_processing(event)
 
-
-        # self.vcard.event_processing(event)
-        # if event.type == pygame.KEYDOWN and event.key == pygame.K_z:
-        #     self.fly.begin(vcard=self.vcard, finish=(400, 300))
-        self.vhand.event_processing(event)
-        self.vhand_my.event_processing(event)
-        self.playzone.event_processing(event)
 
     def on_play_card(self, card: Card, player_index: int):
         """Начинаем анимацию полета карты с руки в отбой (top)."""

@@ -8,7 +8,7 @@ class ViewCard:
     WIDTH = RSC["card_width"]
     HEIGHT = RSC["card_height"]
     IMAGE_BACK = None
-    SELECTED_COLOR = 'yellow'
+    SELECTED_COLOR = 'magenta'
     BORDERX = RSC["border_x"]
     BORDERY = RSC["border_y"]
 
@@ -19,6 +19,7 @@ class ViewCard:
         self.y = y
         self.opened = opened
         self.selected = False
+        self.chooseable = False    # можно на карту кликать или бесполезно (играбельна или нет)
 
     @property
     def card(self):
