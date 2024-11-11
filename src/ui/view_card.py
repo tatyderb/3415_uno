@@ -2,6 +2,7 @@ import pygame
 
 from src.card import Card
 from src.resource import RESOURCE as RSC
+from src.ui.event import CustomEvent
 
 
 class ViewCard:
@@ -70,6 +71,20 @@ class ViewCard:
         display.blit(img, (self.x, self.y))
 
     def event_processing(self, event: pygame.event.Event):
+        if event.type == CustomEvent.SELECT_INTERACTIVE_CARDS:
+            data = event.user_data
+            print(f'ViewCard.event_processing->{CustomEvent(event.type).name} user_data={data}')
+            cards = data['cards']  # list[Card]
+            if not cards:
+                # снять выделение со всех карт
+                self.chooseable = False
+                self.selected = False
+            else:
+                # поставить выделение на playable карты
+                if self.card in cards:
+                    self.chooseable = True
+                    self.selected = True
+
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
             print(f'Select!')
             self.select()

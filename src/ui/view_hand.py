@@ -19,21 +19,6 @@ class ViewHand:
             vc.redraw(display)
 
     def event_processing(self, event: pygame.event.Event):
-        if event.type == CustomEvent.SELECT_INTERACTIVE_CARDS:
-            data = event.user_data
-            print(f'ViewHand.event_processing->{CustomEvent(event.type).name} user_data={data}')
-            cards = data['cards']  # list[Card]
-            if not cards:
-                # снять выделение со всех карт
-                for vc in self.vcards:    # list[ViewCard]
-                    vc.chooseable = False
-                    vc.selected = False
-            else:
-                # поставить выделение на playable карты
-                for vc in cards:
-                    vc.chooseable = True
-                    vc.selected = True
-
 
         for vc in self.vcards:
             if vc is None:
